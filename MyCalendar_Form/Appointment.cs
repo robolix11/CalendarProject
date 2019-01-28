@@ -42,7 +42,7 @@ namespace MyCalendar_Form
 
     enum AppointmentType
     {
-        Standard,
+        Default,
         SchoolHoliday,
         SpecialDay        
     }

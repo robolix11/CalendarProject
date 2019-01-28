@@ -18,6 +18,8 @@ namespace MyCalendar_Form
             this.month = month;
             this.year = year;
 
+
+            //Added becouse not actual Holidays, but higly prefered to have on the List
             if(day == 31 && month == 12)
             {
                 AddAppointment(new Appointment(0, 0, "Silvester", AppointmentType.SpecialDay));

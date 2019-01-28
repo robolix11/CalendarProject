@@ -41,6 +41,11 @@ namespace MyCalendar_Form
             AddDayButtonsToForm();
         }
 
+        protected override void OnClick(EventArgs e)
+        {
+            DeselectOthers(null);
+        }
+
         private void Form1_MouseWheel(object sender, MouseEventArgs e)
         {
             int delta = e.Delta;
@@ -106,6 +111,17 @@ namespace MyCalendar_Form
             CurrentMonth--;
         }
 
+        internal void DeselectOthers(DayButton newSelectedDayButton)
+        {
+            foreach(DayButton dayButton in DayButtons)
+            {
+                dayButton.IsSelected = dayButton.Equals(newSelectedDayButton);
+                dayButton.Refresh();
+            }
+
+            //Refresh();
+        }
+
         private void ScrollMonthUp()
         {
             if(CurrentMonth == 12)
@@ -127,7 +143,7 @@ namespace MyCalendar_Form
                 int x = i * (ScreenWidth / 10) + (int)((ScreenWidth / 10) * 1.5);
                 int y = j * (ScreenHeight / 10) + ScreenHeight / 3;
 
-                DayButton db = new DayButton(x, y, (ScreenWidth / 10) - 5, (ScreenHeight / 10) - 5);
+                DayButton db = new DayButton(x, y, this, (ScreenWidth / 10) - 5, (ScreenHeight / 10) - 5);
                 DayButtons[index] = db;
                 Controls.Add(db);
             }
