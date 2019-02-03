@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyCalendar_Form
 {
-    class Appointment : IComparable<Appointment>
+    public class Appointment : IComparable<Appointment>
     {
         public string title;
         public int hour = 0, minute = 0;
@@ -40,7 +40,7 @@ namespace MyCalendar_Form
         }
     }
 
-    enum AppointmentType
+    public enum AppointmentType
     {
         Default,
         SchoolHoliday,

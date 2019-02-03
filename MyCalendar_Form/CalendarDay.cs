@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyCalendar_Form
 {
-    class CalendarDay
+    public class CalendarDay
     {
         public int Day { get; }
         int month, year;

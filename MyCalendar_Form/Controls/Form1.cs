@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyCalendar_Form.Controls;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,12 +18,14 @@ namespace MyCalendar_Form
         public int ScreenWidth        {get { return ClientSize.Width; }        }
         public int ScreenHeight {get { return ClientSize.Height; } }
 
-        int CurrentYear = DateTime.Now.Year;
-        int CurrentMonth = DateTime.Now.Month;
+        public int CurrentYear = DateTime.Now.Year;
+        public int CurrentMonth = DateTime.Now.Month;
 
         MonthViewDrawer mvd;
-        Cache cache = new Cache();
-        public DayButton[] DayButtons = new DayButton[42];
+        public Cache Cache;
+        //public DayButton[] DayButtons = new DayButton[42];
+        public DayButtonField dbf;
+        public AppointmentButtonField abf;
 
         public Form1()
         {
@@ -35,15 +38,16 @@ namespace MyCalendar_Form
             this.BackColor = Color.FromArgb(40,40,40);
 
             mvd = new MonthViewDrawer(this);
+            Cache = new Cache(this);
 
             //appointmentSyncTimer_Tick(null,null;
 
-            AddDayButtonsToForm();
+            InitOwnFormComponents();
         }
 
         protected override void OnClick(EventArgs e)
         {
-            DeselectOthers(null);
+            dbf.SelectedDayButton = null;
         }
 
         private void Form1_MouseWheel(object sender, MouseEventArgs e)
@@ -60,23 +64,59 @@ namespace MyCalendar_Form
             this.Refresh();
         }
 
-        
-
         private void Form1_Resize(object sender, EventArgs e)
         {
-            mvd.Rescale();
+            dbf.SetBounds(0, ScreenHeight / 3, 2 * ScreenWidth / 3, 2 * ScreenHeight / 3);
+            abf.SetBounds(2 * ScreenWidth / 3, ScreenHeight / 3, ScreenWidth / 3, 2 * ScreenHeight / 3);
             this.Refresh();
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            mvd.DrawMonthView(cache.GetMonthData(CurrentYear,CurrentMonth), e);
+            mvd.DrawMonthView(Cache.GetMonthData(CurrentYear,CurrentMonth), e);
         }
 
-        private void AddAppointment(int year, int month, int day, Appointment a)
+        public void AddAppointment(int year, int month, int day, Appointment a)
         {
-            cache.AddAppointment(year, month, day, a);
+            Cache.AddAppointment(year, month, day, a);
+            if(year == CurrentYear && month == CurrentMonth)
+            {
+                dbf.RefreshDay(day);
+            }
         }
+        
+        private void ScrollMonthDown()
+        {
+            if (CurrentMonth == 1)
+            {
+                CurrentYear--;
+                CurrentMonth = 12;
+                return;
+            }
+            CurrentMonth--;
+        }
+
+        private void ScrollMonthUp()
+        {
+            if(CurrentMonth == 12)
+            {
+                CurrentYear++;
+                CurrentMonth = 1;
+                return;
+            }
+            CurrentMonth++;
+        }
+
+        private void InitOwnFormComponents()
+        {
+            abf = new AppointmentButtonField(this);
+            dbf = new DayButtonField(this, abf);
+            dbf.SetBounds(0, ScreenHeight / 3, 2 * ScreenWidth / 3,2 * ScreenHeight / 3);
+            abf.SetBounds(2 * ScreenWidth / 3, ScreenHeight / 3, ScreenWidth / 3, 2 * ScreenHeight / 3);
+            Controls.Add(dbf);
+            Controls.Add(abf);
+        }
+
 
         private void appointmentSyncTimer_Tick(object sender, EventArgs e)
         {
@@ -93,60 +133,11 @@ namespace MyCalendar_Form
                 //_Node.
             }
 
-            
+
 
             //MessageBox.Show(_Path);
 
             //"\Data\AppointmentData.xml"
-        }
-
-        private void ScrollMonthDown()
-        {
-            if (CurrentMonth == 1)
-            {
-                CurrentYear--;
-                CurrentMonth = 12;
-                return;
-            }
-            CurrentMonth--;
-        }
-
-        internal void DeselectOthers(DayButton newSelectedDayButton)
-        {
-            foreach(DayButton dayButton in DayButtons)
-            {
-                dayButton.IsSelected = dayButton.Equals(newSelectedDayButton);
-                dayButton.Refresh();
-            }
-
-            //Refresh();
-        }
-
-        private void ScrollMonthUp()
-        {
-            if(CurrentMonth == 12)
-            {
-                CurrentYear++;
-                CurrentMonth = 1;
-                return;
-            }
-            CurrentMonth++;
-        }
-
-        private void AddDayButtonsToForm()
-        {
-            for (int index = 0; index < 42; index++)
-            {
-                int i = index % 7;
-                int j = index / 7;
-
-                int x = i * (ScreenWidth / 10) + (int)((ScreenWidth / 10) * 1.5);
-                int y = j * (ScreenHeight / 10) + ScreenHeight / 3;
-
-                DayButton db = new DayButton(x, y, this, (ScreenWidth / 10) - 5, (ScreenHeight / 10) - 5);
-                DayButtons[index] = db;
-                Controls.Add(db);
-            }
         }
     }
 }

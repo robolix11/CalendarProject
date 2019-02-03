@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MyCalendar_Form
 {
-    class MonthData : IComparable<MonthData>
+    public class MonthData : IComparable<MonthData>
     {
         public int Year { get; }
         public int Month { get; }
-        public CalendarDay[] CalendarDays;
+        public List<CalendarDay> CalendarDays;
 
         public MonthData(int year, int month)
         {
@@ -19,11 +19,11 @@ namespace MyCalendar_Form
 
 
             int dayCount = GetDayCount();
-            CalendarDays = new CalendarDay[dayCount];
+            CalendarDays = new List<CalendarDay>(dayCount);
 
             for(int i = 1; i <= dayCount; i++)
             {
-                CalendarDays[i-1] = new CalendarDay(i, Month,Year);
+                CalendarDays.Add(new CalendarDay(i, Month,Year));
             }
         }
 

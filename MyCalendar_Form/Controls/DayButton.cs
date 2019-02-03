@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyCalendar_Form.Controls;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -10,28 +11,30 @@ namespace MyCalendar_Form
 {
     public class DayButton : Control
     {
-        private SolidBrush borderBrush = new SolidBrush(Color.Black), textBrush = new SolidBrush(Color.Cyan);
+        private SolidBrush borderBrush = new SolidBrush(Color.Black), textBrush = new SolidBrush(Color.White);
         private Rectangle borderRect;
-        private bool isSelected = false,  mouse_over = false;
         private StringFormat stringFormat = new StringFormat();
 
         public Color TextColor { get { return textBrush.Color; } set { textBrush.Color = value; } }
         public Color BorderColor { get { return borderBrush.Color; } set { borderBrush.Color = value; } }
-        public Color NationalHolidayMarkerColor = Color.Gold;
-        public Color ScoolHolidayMarkerColor = Color.Lime;
-        public Color ActiveColor = Color.LightGray;
+        public Color NationalHolidayMarkerColor = Color.Gold, ScoolHolidayMarkerColor = Color.Lime, ActiveColor = Color.Black;
+
+        private Color PassiveColor = Color.Gray;
 
         public bool IsSelected
         {
-            get { return isSelected; }
-            set
-            {
-                isSelected = value;
-                BackColor = isSelected ? ActiveColor : mForm.BackColor;
+            get { return ((DayButtonField)Parent).SelectedDayButton == null ? false : ((DayButtonField)Parent).SelectedDayButton.Equals(this); }
+        }
+        public bool IsMainMonth = false;
+
+        public bool IsScoolHoliday {
+            get {
+                if (!IsMainMonth) return false;
+                Form1 form = (Form1)(Parent.Parent);
+                return form.Cache.GetMonthData(form.CurrentYear, form.CurrentMonth).CalendarDays[int.Parse(Text)-1].Appointments.FindAll(a => a.Type == AppointmentType.SchoolHoliday).Count > 0;
             }
         }
-
-        public bool IsScoolHoliday = false, IsNationalHoliday = false;
+        public bool IsNationalHoliday = false;
 
         public override Cursor Cursor { get; set; } = Cursors.Default;
         public float BorderThickness { get; set; } = 2;
@@ -49,6 +52,8 @@ namespace MyCalendar_Form
             stringFormat.Alignment = StringAlignment.Center;
             stringFormat.LineAlignment = StringAlignment.Center;
 
+            PassiveColor = mForm.BackColor;
+
             this.Paint += DayButton_Paint;
         }
         
@@ -57,18 +62,20 @@ namespace MyCalendar_Form
         {
             Font font = new Font("Arial", (Height / 3), FontStyle.Bold);
 
-            //borderRect = new Rectangle(this.Location.X-Width/2, this.Location.Y-Height/2, Width, Height);
-            //borderRect = new Rectangle(this.Location.X, this.Location.Y, Width, Height);
+            BackColor = IsSelected ? ActiveColor : PassiveColor;
+
             borderRect = new Rectangle(0, 0, Width, Height);
             e.Graphics.Clip = new Region(borderRect);
 
             e.Graphics.DrawRectangle(new Pen(borderBrush, BorderThickness), borderRect);
             e.Graphics.DrawString(this.Text, font, textBrush, borderRect, stringFormat);
 
-            if (!(IsScoolHoliday || IsNationalHoliday)) return;
+            bool schoolHoliday = IsScoolHoliday;
+            bool nationalHoliday = IsNationalHoliday;
+            if (!(schoolHoliday || nationalHoliday)) return;
 
             Rectangle innerBorderRect = new Rectangle(5,5,Width-10,Height-10);
-            e.Graphics.DrawRectangle(new Pen(IsNationalHoliday ? NationalHolidayMarkerColor : ScoolHolidayMarkerColor, BorderThickness), innerBorderRect);
+            e.Graphics.DrawRectangle(new Pen(nationalHoliday ? NationalHolidayMarkerColor : ScoolHolidayMarkerColor, BorderThickness), innerBorderRect);
             
         }
 
@@ -76,27 +83,28 @@ namespace MyCalendar_Form
         protected override void OnClick(EventArgs e)
         {
             base.OnClick(e);
-            BackColor = Color.White;
-            //MessageBox.Show("i was clicked!");
-            IsSelected = true;
 
-            mForm.DeselectOthers(this);
+            if (!IsMainMonth) return;
+
+            ((DayButtonField)Parent).SelectedDayButton = this;
         }
 
         protected override void OnMouseEnter(EventArgs e)
         {
-            BackColor = isSelected ? ActiveColor : Color.Gray;
+            PassiveColor = Color.LightGray;
 
             base.OnMouseEnter(e);
-            mouse_over = true;
+
+            Refresh();
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            BackColor = isSelected ? ActiveColor : mForm.BackColor;
+            PassiveColor = mForm.BackColor;
 
             base.OnMouseLeave(e);
-            mouse_over = false;
+
+            Refresh();
         }
 
     }

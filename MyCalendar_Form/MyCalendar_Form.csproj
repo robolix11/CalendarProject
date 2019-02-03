@@ -52,7 +52,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\AppointmentButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\AppointmentButtonField.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\DayButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\DayButtonField.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Helper\ApiHelper.cs" />

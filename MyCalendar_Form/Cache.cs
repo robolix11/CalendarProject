@@ -7,9 +7,16 @@ using System.Windows.Forms;
 
 namespace MyCalendar_Form
 {
-    class Cache
+    public class Cache
     {
         List<MonthData> monthData = new List<MonthData>();
+
+        Form1 form;
+
+        public Cache(Form1 form)
+        {
+            this.form = form;
+        }
 
         public MonthData GetMonthData(int year, int month)
         {
@@ -49,7 +56,7 @@ namespace MyCalendar_Form
                 DateTime current = new DateTime(start.Year, start.Month, start.Day, 0, 0, 0);
                 while(current.CompareTo(end) <= 0)
                 {
-                    AddAppointment(current.Year, current.Month, current.Day, new Appointment(true, shm.name, AppointmentType.SchoolHoliday));
+                    form.AddAppointment(current.Year, current.Month, current.Day, new Appointment(true, shm.name, AppointmentType.SchoolHoliday));
                     current = current.AddDays(1);
                 }
 
@@ -64,7 +71,7 @@ namespace MyCalendar_Form
             {
                 string dateString = entry.Value.datum;
                 string[] _Split = dateString.Split('-');
-                AddAppointment(int.Parse(_Split[0]), int.Parse(_Split[1]), int.Parse(_Split[2]), new Appointment(true, entry.Key, AppointmentType.SpecialDay));
+                form.AddAppointment(int.Parse(_Split[0]), int.Parse(_Split[1]), int.Parse(_Split[2]), new Appointment(true, entry.Key, AppointmentType.SpecialDay));
             }
         }
     }
