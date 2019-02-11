@@ -27,6 +27,8 @@ namespace MyCalendar_Form
         public DayButtonField dbf;
         public AppointmentButtonField abf;
 
+        Label HeaderLabel;
+
         public Form1()
         {
             InitializeComponent();
@@ -34,6 +36,9 @@ namespace MyCalendar_Form
             this.Resize += Form1_Resize;
 
             this.MouseWheel += Form1_MouseWheel;
+
+            HeaderLabel = new Label();
+            HeaderLabel.SetBounds(0, 0, Width, Height / 3);
 
             this.BackColor = Color.FromArgb(40,40,40);
 

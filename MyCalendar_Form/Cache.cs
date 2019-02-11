@@ -46,6 +46,16 @@ namespace MyCalendar_Form
         {
             ScoolHolidayModel[] scoolHolidayModels = await ScoolHolidayProvider.GetHollidays(Year);
 
+            try
+            {
+                scoolHolidayModels = await ScoolHolidayProvider.GetHollidays(Year);
+            }
+            catch(Exception e)
+            {
+                return;
+            }
+            if (scoolHolidayModels == null) return;
+
             foreach (ScoolHolidayModel shm in scoolHolidayModels)
             {
                 DateTime start = Helper.DateTimeHelper.ConverStringToDateTime(shm.start);
@@ -67,6 +77,7 @@ namespace MyCalendar_Form
         public async void AddNationalHolidays(int Year)
         {
             Dictionary<string, NationalHoliday> _Result;
+
             try
             {
                 _Result = await NationalHolidayProvider.GetHollidays(Year);
@@ -76,7 +87,8 @@ namespace MyCalendar_Form
                 return;
             }
             if (_Result == null) return;
-            foreach(KeyValuePair<string, NationalHoliday> entry in _Result)
+
+            foreach (KeyValuePair<string, NationalHoliday> entry in _Result)
             {
                 string dateString = entry.Value.datum;
                 string[] _Split = dateString.Split('-');
