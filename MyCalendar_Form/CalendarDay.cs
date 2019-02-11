@@ -22,12 +22,12 @@ namespace MyCalendar_Form
             //Added becouse not actual Holidays, but higly prefered to have on the List
             if(day == 31 && month == 12)
             {
-                AddAppointment(new Appointment(0, 0, "Silvester", AppointmentType.SpecialDay));
+                AddAppointment(new Appointment(true, "Silvester", AppointmentType.SpecialDay));
             }
 
             if (day == 24 && month == 12)
             {
-                AddAppointment(new Appointment(0, 0, "Heiligabend", AppointmentType.SpecialDay));
+                AddAppointment(new Appointment(true, "Heiligabend", AppointmentType.SpecialDay));
             }
         }
 

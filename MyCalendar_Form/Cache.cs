@@ -66,7 +66,16 @@ namespace MyCalendar_Form
 
         public async void AddNationalHolidays(int Year)
         {
-            Dictionary<string, NationalHoliday> _Result = await NationalHolidayProvider.GetHollidays(Year);
+            Dictionary<string, NationalHoliday> _Result;
+            try
+            {
+                _Result = await NationalHolidayProvider.GetHollidays(Year);
+            }catch(Exception e)
+            {
+                //MessageBox.Show(e.StackTrace);
+                return;
+            }
+            if (_Result == null) return;
             foreach(KeyValuePair<string, NationalHoliday> entry in _Result)
             {
                 string dateString = entry.Value.datum;

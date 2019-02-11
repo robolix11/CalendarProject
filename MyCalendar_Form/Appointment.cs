@@ -8,7 +8,13 @@ namespace MyCalendar_Form
 {
     public class Appointment : IComparable<Appointment>
     {
-        public string title;
+        private string title;
+
+        public string Title { get { return "" + title; } set
+            {
+                title = ("" + value[0]).ToUpper() + value.Substring(1);
+            } }
+
         public int hour = 0, minute = 0;
         public bool wholeDay = false;
         public AppointmentType Type;
@@ -17,14 +23,14 @@ namespace MyCalendar_Form
         {
             this.hour = hour;
             this.minute = minute;
-            this.title = title;
+            this.Title = title;
             Type = type;
         }
 
         public Appointment(bool wholeDay, string title, AppointmentType type)
         {
             this.wholeDay = wholeDay;
-            this.title = title;
+            this.Title = title;
             Type = type;
         }
 

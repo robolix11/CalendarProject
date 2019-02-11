@@ -34,8 +34,22 @@ namespace MyCalendar_Form.Controls
             borderRect = new Rectangle(0, 0, Width, Height);
             g.Clip = new Region(borderRect);
 
-            g.FillRectangle(new SolidBrush(Color.Red), borderRect);
-            g.DrawString(Text, font, new SolidBrush(Color.Black), borderRect, stringFormat);
+            g.FillRectangle(new SolidBrush(Parent.BackColor), borderRect);
+            borderRect.Inflate(-1, -1);
+            g.DrawRectangle(new Pen(Color.Black), borderRect);
+            g.DrawString(Text, font, new SolidBrush(Color.Cyan), borderRect, stringFormat);
+        }
+
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            BackColor = Color.LightGray;
+            base.OnMouseEnter(e);
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            BackColor = Parent.BackColor;
+            base.OnMouseLeave(e);
         }
     }
 }

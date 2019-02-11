@@ -39,7 +39,7 @@ namespace MyCalendar_Form.Controls
 
                     Controls.Add(appointmentButtons[index]);
                 }
-                appointmentButtons[index].Text = (a.wholeDay ? "--:--" : a.hour + ":" + a.minute) + "|" + a.title;
+                appointmentButtons[index].Text = (a.wholeDay ? "--:--" : a.hour + " : " + a.minute) + " | " + a.Title;
                 appointmentButtons[index].Show();
                 appointmentButtons[index].Refresh();
                 index++;
@@ -47,6 +47,17 @@ namespace MyCalendar_Form.Controls
             for(int i = index; i < appointmentButtons.Count; i++)
             {
                 appointmentButtons[i].Hide();
+            }
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            for(int i = 0; i < appointmentButtons.Count; i++)
+            {
+                AppointmentButton ab = appointmentButtons[i];
+                ab.SetBounds(0, Height / 7 * i, Width, Height / 7 - 5);
+                ab.Refresh();
             }
         }
     }

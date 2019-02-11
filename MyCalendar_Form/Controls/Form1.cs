@@ -61,6 +61,9 @@ namespace MyCalendar_Form
             {
                 ScrollMonthDown();
             }
+
+            dbf.SelectedDayButton = null;
+
             this.Refresh();
         }
 
