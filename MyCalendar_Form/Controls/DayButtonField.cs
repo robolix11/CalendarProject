@@ -80,5 +80,10 @@ namespace MyCalendar_Form.Controls
         {
             DayButtons.Find(db => db.IsMainMonth && db.Text == "" + day).Refresh();
         }
+
+        internal void RefreshAll()
+        {
+            DayButtons.ForEach(db => db.Refresh());
+        }
     }
 }

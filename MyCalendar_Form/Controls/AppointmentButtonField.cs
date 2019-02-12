@@ -39,7 +39,7 @@ namespace MyCalendar_Form.Controls
 
                     Controls.Add(appointmentButtons[index]);
                 }
-                appointmentButtons[index].Text = (a.wholeDay ? "--:--" : a.hour + " : " + a.minute) + " | " + a.Title;
+                appointmentButtons[index].Text = (a.wholeDay ? "--:--" : "" + (a.hour.ToString().Length < 2 ? "0"+a.hour:""+a.hour)  + " : " + (a.minute.ToString().Length < 2 ? "0" + a.minute :"" + a.minute)) + " | " + a.Title;
                 appointmentButtons[index].Show();
                 appointmentButtons[index].Refresh();
                 index++;

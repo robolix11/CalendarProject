@@ -31,7 +31,10 @@ namespace MyCalendar_Form
             get {
                 if (!IsMainMonth) return false;
                 Form1 form = (Form1)(Parent.Parent);
-                return form.Cache.GetMonthData(form.CurrentYear, form.CurrentMonth).CalendarDays[int.Parse(Text)-1].Appointments.FindAll(a => a.Type == AppointmentType.SchoolHoliday).Count > 0;
+                List<CalendarDay> calendarDays = form.Cache.GetMonthData(form.CurrentYear, form.CurrentMonth).CalendarDays;
+                int index = int.Parse(Text) - 1;
+                if (index >= calendarDays.Count) return false;
+                return calendarDays[index].Appointments.Any(a => a.Type == AppointmentType.SchoolHoliday);
             }
         }
         public bool IsNationalHoliday = false;

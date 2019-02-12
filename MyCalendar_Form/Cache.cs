@@ -11,6 +11,10 @@ namespace MyCalendar_Form
     {
         List<MonthData> monthData = new List<MonthData>();
 
+        List<Tuple<Appointment, int, int>> YearlyAppointments = new List<Tuple<Appointment, int, int>>();
+        List<Tuple<Appointment, int>> MonthlyAppointments = new List<Tuple<Appointment, int>>();
+        List<Appointment> DaylyAppointments = new List<Appointment>();
+
         Form1 form;
 
         public Cache(Form1 form)
@@ -33,13 +37,85 @@ namespace MyCalendar_Form
                 next = new MonthData(year, month);
                 monthData.Add(next);
             }
+            else
+            {
+                DeleteRepeatingAppointmentsFromMonthData(next);
+            }
+            AddRepeatingAppointmentsToMonthData(next, month);
             return next;
         }
 
-        public void AddAppointment(int year, int month, int day, Appointment a)
+        
+
+        public void AddAppointment(string year, string month, string day, Appointment a)
         {
-            MonthData md = GetMonthData(year, month);
-            md.AddAppointment(day, a);
+            if (day == "-")
+            {
+                a.repeating = true;
+                DaylyAppointments.Add(a);
+                return;
+            }
+
+            int intDay = int.Parse(day);
+
+            if (month == "-")
+            {
+                a.repeating = true;
+                MonthlyAppointments.Add(new Tuple<Appointment,int>(a,intDay));
+                return;
+            }
+            
+            int intMonth = int.Parse(month);
+
+            if (year == "-")
+            {
+                a.repeating = true;
+                YearlyAppointments.Add(new Tuple<Appointment, int, int>(a, intDay, intMonth));
+                return;
+            }
+
+            int intYear = int.Parse(year);
+
+            MonthData md = GetMonthData(intYear, intMonth);
+            md.AddAppointment(intDay, a);
+        }
+
+        private void AddRepeatingAppointmentsToMonthData(MonthData md, int month)
+        {
+            foreach(Appointment a in DaylyAppointments)
+            {
+                foreach(CalendarDay cd in md.CalendarDays)
+                {
+                    cd.AddAppointment(a);
+                }
+            }
+
+            foreach(Tuple<Appointment,int> tuple in MonthlyAppointments)
+            {
+                for(int i = 0; i < md.CalendarDays.Count; i++)
+                {
+                    if (tuple.Item2 != i + 1) continue;
+                    md.CalendarDays[i].AddAppointment(tuple.Item1);
+                }
+            }
+
+            foreach (Tuple<Appointment, int, int> tuple2 in YearlyAppointments)
+            {
+                if (tuple2.Item3 != month) continue;
+                for (int i = 0; i < md.CalendarDays.Count; i++)
+                {
+                    if (tuple2.Item2 != i + 1) continue;
+                    md.CalendarDays[i].AddAppointment(tuple2.Item1);
+                }
+            }
+        }
+
+        private void DeleteRepeatingAppointmentsFromMonthData(MonthData md)
+        {
+            foreach(CalendarDay cd in md.CalendarDays)
+            {
+                cd.Appointments.RemoveAll(a => a.repeating);
+            }
         }
 
         public async void AddScoolHolidays(int Year)
@@ -66,7 +142,7 @@ namespace MyCalendar_Form
                 DateTime current = new DateTime(start.Year, start.Month, start.Day, 0, 0, 0);
                 while(current.CompareTo(end) <= 0)
                 {
-                    form.AddAppointment(current.Year, current.Month, current.Day, new Appointment(true, shm.name, AppointmentType.SchoolHoliday));
+                    form.AddAppointment(""+current.Year, ""+current.Month, ""+current.Day, new Appointment(true, shm.name, AppointmentType.SchoolHoliday));
                     current = current.AddDays(1);
                 }
 
@@ -92,7 +168,7 @@ namespace MyCalendar_Form
             {
                 string dateString = entry.Value.datum;
                 string[] _Split = dateString.Split('-');
-                form.AddAppointment(int.Parse(_Split[0]), int.Parse(_Split[1]), int.Parse(_Split[2]), new Appointment(true, entry.Key, AppointmentType.SpecialDay));
+                form.AddAppointment(_Split[0], _Split[1], _Split[2], new Appointment(true, entry.Key, AppointmentType.SpecialDay));
             }
         }
     }

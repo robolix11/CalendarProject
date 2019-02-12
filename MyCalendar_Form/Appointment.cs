@@ -16,7 +16,7 @@ namespace MyCalendar_Form
             } }
 
         public int hour = 0, minute = 0;
-        public bool wholeDay = false;
+        public bool wholeDay = false, repeating = false;
         public AppointmentType Type;
 
         public Appointment(int hour, int minute, string title, AppointmentType type)

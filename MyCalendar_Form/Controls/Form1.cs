@@ -26,6 +26,9 @@ namespace MyCalendar_Form
         //public DayButton[] DayButtons = new DayButton[42];
         public DayButtonField dbf;
         public AppointmentButtonField abf;
+        public AddAppointmentButton aab;
+
+        AddAppointmentForm addAppointmentForm;
 
         Label HeaderLabel;
 
@@ -45,6 +48,7 @@ namespace MyCalendar_Form
             mvd = new MonthViewDrawer(this);
             Cache = new Cache(this);
 
+            addAppointmentForm = new AddAppointmentForm(this);
             //appointmentSyncTimer_Tick(null,null;
 
             InitOwnFormComponents();
@@ -72,10 +76,13 @@ namespace MyCalendar_Form
             this.Refresh();
         }
 
+        
+
         private void Form1_Resize(object sender, EventArgs e)
         {
             dbf.SetBounds(0, ScreenHeight / 3, 2 * ScreenWidth / 3, 2 * ScreenHeight / 3);
             abf.SetBounds(2 * ScreenWidth / 3, ScreenHeight / 3, ScreenWidth / 3, 2 * ScreenHeight / 3);
+            aab.SetBounds((int)(Width / 12 * 10.75) - 5, Height / 3 - (int)(1.5 * Height / 12), Width / 12, Height / 12);
             this.Refresh();
         }
 
@@ -84,15 +91,34 @@ namespace MyCalendar_Form
             mvd.DrawMonthView(Cache.GetMonthData(CurrentYear,CurrentMonth), e);
         }
 
-        public void AddAppointment(int year, int month, int day, Appointment a)
+        public void AddAppointment(string year, string month, string day, Appointment a)
         {
             Cache.AddAppointment(year, month, day, a);
-            if(year == CurrentYear && month == CurrentMonth)
+
+            if(year == "-" || month == "-")
             {
-                dbf.RefreshDay(day);
+                if(day == "-")
+                {
+                    dbf.RefreshAll();
+                    return;
+                }
+
+                dbf.RefreshDay(int.Parse(day));
+                return;
+            }
+
+            if(int.Parse(year) == CurrentYear && int.Parse(month) == CurrentMonth)
+            {
+                dbf.RefreshDay(int.Parse(day));
             }
         }
-        
+
+        public void AddAppointmentButton_Click(AddAppointmentButton addAppointmentButton, EventArgs e)
+        {
+            if (addAppointmentForm.Visible) return;
+            addAppointmentForm.Visible = true;
+        }
+
         private void ScrollMonthDown()
         {
             if (CurrentMonth == 1)
@@ -123,6 +149,10 @@ namespace MyCalendar_Form
             abf.SetBounds(2 * ScreenWidth / 3, ScreenHeight / 3, ScreenWidth / 3, 2 * ScreenHeight / 3);
             Controls.Add(dbf);
             Controls.Add(abf);
+
+            aab = new AddAppointmentButton();
+            aab.SetBounds((int)(Width / 12 * 10.75) - 5, Height / 3 - (int)(1.5 * Height / 12), Width / 12, Height / 12);
+            Controls.Add(aab);
         }
 
 
