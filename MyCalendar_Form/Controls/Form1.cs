@@ -1,4 +1,5 @@
 ﻿using MyCalendar_Form.Controls;
+using MyCalendar_Form.ExternalDataProvider;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,8 +14,10 @@ using System.Xml;
 
 namespace MyCalendar_Form
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
+        const string APPOINTMENT_DATA_FILE = "/ExternalMemory/AppoitmentData.txt";
+
         public int ScreenWidth        {get { return ClientSize.Width; }        }
         public int ScreenHeight {get { return ClientSize.Height; } }
 
@@ -27,12 +30,13 @@ namespace MyCalendar_Form
         public DayButtonField dbf;
         public AppointmentButtonField abf;
         public AddAppointmentButton aab;
+        public SaveAppoitmentsButton sab;
 
         AddAppointmentForm addAppointmentForm;
-
+        
         Label HeaderLabel;
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
             this.Paint += Form1_Paint;
@@ -47,22 +51,24 @@ namespace MyCalendar_Form
 
             mvd = new MonthViewDrawer(this);
             Cache = new Cache(this);
-
+            AppoitmentDataHandler.form = this;
             addAppointmentForm = new AddAppointmentForm(this);
-            //appointmentSyncTimer_Tick(null,null;
 
             InitOwnFormComponents();
+
+            AppoitmentDataHandler.AddAppoitmentsFromFile(Environment.CurrentDirectory + APPOINTMENT_DATA_FILE);
         }
 
         protected override void OnClick(EventArgs e)
         {
             dbf.SelectedDayButton = null;
         }
-
+        
         private void Form1_MouseWheel(object sender, MouseEventArgs e)
         {
-            int delta = e.Delta;
-            if(delta < 0)
+            if (abf.Bounds.Contains(e.Location)) return;
+
+            if(e.Delta < 0)
             {
                 ScrollMonthUp();
             }
@@ -76,13 +82,12 @@ namespace MyCalendar_Form
             this.Refresh();
         }
 
-        
-
         private void Form1_Resize(object sender, EventArgs e)
         {
             dbf.SetBounds(0, ScreenHeight / 3, 2 * ScreenWidth / 3, 2 * ScreenHeight / 3);
             abf.SetBounds(2 * ScreenWidth / 3, ScreenHeight / 3, ScreenWidth / 3, 2 * ScreenHeight / 3);
             aab.SetBounds((int)(Width / 12 * 10.75) - 5, Height / 3 - (int)(1.5 * Height / 12), Width / 12, Height / 12);
+            sab.SetBounds((int)(Width / 12 * 8.75) - 5, Height / 3 - (int)(1.5 * Height / 12), Width / 9, Height / 12);
             this.Refresh();
         }
 
@@ -151,31 +156,16 @@ namespace MyCalendar_Form
             Controls.Add(abf);
 
             aab = new AddAppointmentButton();
+            sab = new SaveAppoitmentsButton();
             aab.SetBounds((int)(Width / 12 * 10.75) - 5, Height / 3 - (int)(1.5 * Height / 12), Width / 12, Height / 12);
+            sab.SetBounds((int)(Width / 12 * 8.75) - 5, Height / 3 - (int)(1.5 * Height / 12), Width / 9, Height / 12);
             Controls.Add(aab);
+            Controls.Add(sab);
         }
 
-
-        private void appointmentSyncTimer_Tick(object sender, EventArgs e)
+        public void SaveAppoitmentsButton_Click(SaveAppoitmentsButton saveAppoitmentsButton, EventArgs e)
         {
-            string _Path = Directory.GetCurrentDirectory();
-            _Path = Path.Combine(_Path, "Data\\AppointmentData.xml");
-
-            if (!File.Exists(_Path)) { return; }
-
-            XmlDocument _XmlDocument = new XmlDocument();
-            _XmlDocument.Load(_Path);
-
-            foreach (XmlNode _Node in _XmlDocument.DocumentElement.ChildNodes)
-            {
-                //_Node.
-            }
-
-
-
-            //MessageBox.Show(_Path);
-
-            //"\Data\AppointmentData.xml"
+            AppoitmentDataHandler.WriteAllAppoitmentsToFile(Environment.CurrentDirectory + APPOINTMENT_DATA_FILE);
         }
     }
 }

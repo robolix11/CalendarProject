@@ -9,14 +9,15 @@ namespace MyCalendar_Form
     public class CalendarDay
     {
         public int Day { get; }
-        int month, year;
+        public int Month { get; }
+        public int Year{ get; }
         public List<Appointment> Appointments = new List<Appointment>();
 
         public CalendarDay(int day, int month, int year)
         {
             this.Day = day;
-            this.month = month;
-            this.year = year;
+            this.Month = month;
+            this.Year = year;
 
 
             //Added becouse not actual Holidays, but higly prefered to have on the List

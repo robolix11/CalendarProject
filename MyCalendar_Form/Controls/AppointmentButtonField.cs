@@ -9,13 +9,35 @@ namespace MyCalendar_Form.Controls
 {
     public class AppointmentButtonField : Control
     {
+        int offset = 0;
+
         private List<AppointmentButton> appointmentButtons = new List<AppointmentButton>();
-        Form1 form;
-        public AppointmentButtonField(Form1 form)
+        MainForm form;
+        public AppointmentButtonField(MainForm form)
         {
             this.form = form;
             Visible = true;
+            this.MouseWheel += AppointmentButtonField_MouseWheel;
         }
+
+        private void AppointmentButtonField_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta < 0)
+            {
+                offset = offset > 0 ? offset - 1: 0;
+            }
+            else
+            {
+                if (appointmentButtons.Count - offset <= 7) return;
+                offset++;
+            }
+
+            for (int i = 0; i < appointmentButtons.Count; i++) { 
+                appointmentButtons[i].SetBounds(0, Height / 7 * (i - offset), Width, Height / 7 - 5);
+            }
+        }
+
+
 
         public void SetAppointmentViewDate(CalendarDay calendarDay)
         {

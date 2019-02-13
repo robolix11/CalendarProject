@@ -17,7 +17,7 @@ namespace MyCalendar_Form
 
         public Color TextColor { get { return textBrush.Color; } set { textBrush.Color = value; } }
         public Color BorderColor { get { return borderBrush.Color; } set { borderBrush.Color = value; } }
-        public Color NationalHolidayMarkerColor = Color.Gold, ScoolHolidayMarkerColor = Color.Lime, ActiveColor = Color.Black;
+        public Color NationalHolidayMarkerColor = Color.Gold, ScoolHolidayMarkerColor = Color.Lime, ActiveColor = Color.FromArgb(10,10,10);
 
         private Color PassiveColor = Color.Gray;
 
@@ -30,7 +30,7 @@ namespace MyCalendar_Form
         public bool IsScoolHoliday {
             get {
                 if (!IsMainMonth) return false;
-                Form1 form = (Form1)(Parent.Parent);
+                MainForm form = (MainForm)(Parent.Parent);
                 List<CalendarDay> calendarDays = form.Cache.GetMonthData(form.CurrentYear, form.CurrentMonth).CalendarDays;
                 int index = int.Parse(Text) - 1;
                 if (index >= calendarDays.Count) return false;
@@ -42,9 +42,9 @@ namespace MyCalendar_Form
         public override Cursor Cursor { get; set; } = Cursors.Default;
         public float BorderThickness { get; set; } = 2;
 
-        private Form1 mForm;
+        private MainForm mForm;
 
-        public DayButton(int x, int y, Form1 f,int width = 100, int height = 100)
+        public DayButton(int x, int y, MainForm f,int width = 100, int height = 100)
         {
             mForm = f;
             //this.SetLocation(x, y);
@@ -75,13 +75,17 @@ namespace MyCalendar_Form
 
             bool schoolHoliday = IsScoolHoliday;
             bool nationalHoliday = IsNationalHoliday;
-            if (!(schoolHoliday || nationalHoliday)) return;
+            if (!(schoolHoliday || nationalHoliday || IsToday())) return;
 
             Rectangle innerBorderRect = new Rectangle(5,5,Width-10,Height-10);
-            e.Graphics.DrawRectangle(new Pen(nationalHoliday ? NationalHolidayMarkerColor : ScoolHolidayMarkerColor, BorderThickness), innerBorderRect);
+            e.Graphics.DrawRectangle(new Pen(IsToday() ? Color.Blue : nationalHoliday ? NationalHolidayMarkerColor : ScoolHolidayMarkerColor, BorderThickness), innerBorderRect);
             
         }
 
+        private bool IsToday()
+        {
+            return mForm.CurrentYear == DateTime.Now.Year && mForm.CurrentMonth == DateTime.Now.Month && Text == "" + DateTime.Now.Day;
+        }
 
         protected override void OnClick(EventArgs e)
         {
@@ -94,7 +98,7 @@ namespace MyCalendar_Form
 
         protected override void OnMouseEnter(EventArgs e)
         {
-            PassiveColor = Color.LightGray;
+            PassiveColor = Color.FromArgb(70,70,70);
 
             base.OnMouseEnter(e);
 

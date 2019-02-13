@@ -13,8 +13,8 @@ namespace MyCalendar_Form.Controls
     public partial class AddAppointmentForm : Form
     {
         string CurrDay = "" + DateTime.Now.Day, CurrMonth = ""+DateTime.Now.Month, CurrYear = "" + DateTime.Now.Year;
-        Form1 form1;
-        public AddAppointmentForm(Form1 form1)
+        MainForm form1;
+        public AddAppointmentForm(MainForm form1)
         {
             InitializeComponent();
 
@@ -25,9 +25,7 @@ namespace MyCalendar_Form.Controls
             numericUpDown2.Text = CurrMonth;
             numericUpDown3.Text = CurrYear;
 
-            numericUpDown1.Controls[0].Visible = false;
-            numericUpDown1.Controls[1].Width += 25;
-
+            numericUpDown1.Controls[0].Hide();
             numericUpDown2.Controls[0].Hide();
             numericUpDown3.Controls[0].Hide();
         }
@@ -36,6 +34,14 @@ namespace MyCalendar_Form.Controls
         {
             //base.OnClosing(e);
             e.Cancel = true;
+            Visible = false;
+        }
+        
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (textBox1.Text.Length <= 0) return;
+            Appointment appointment = checkBox4.Checked ? new Appointment(true, textBox1.Text, AppointmentType.Default) : new Appointment(int.Parse(numericUpDown5.Text), int.Parse(numericUpDown4.Text), textBox1.Text, AppointmentType.Default);
+            form1.AddAppointment(numericUpDown3.Text, numericUpDown2.Text, numericUpDown1.Text, appointment);
             Visible = false;
         }
 
@@ -71,15 +77,6 @@ namespace MyCalendar_Form.Controls
                 numericUpDown3.Text = "-";
             }
         }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Appointment appointment = checkBox4.Checked ? new Appointment(true, textBox1.Text, AppointmentType.Default) : new Appointment(int.Parse(numericUpDown5.Text), int.Parse(numericUpDown4.Text), textBox1.Text, AppointmentType.Default);
-            form1.AddAppointment(numericUpDown3.Text, numericUpDown2.Text, numericUpDown1.Text, appointment);
-            Visible = false;
-        }
-
-        
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
@@ -137,11 +134,28 @@ namespace MyCalendar_Form.Controls
 
         private void checkBox4_CheckedChanged(object sender, EventArgs e)
         {
-            numericUpDown4.ReadOnly = checkBox4.Checked;
-            numericUpDown4.Text = checkBox4.Checked ? "-" : "" + DateTime.Now.Hour;
-
             numericUpDown5.ReadOnly = checkBox4.Checked;
-            numericUpDown5.Text = checkBox4.Checked ? "-" : "" + DateTime.Now.Minute;
+            numericUpDown5.Text = checkBox4.Checked ? "-" : "" + DateTime.Now.Hour;
+
+            numericUpDown4.ReadOnly = checkBox4.Checked;
+            numericUpDown4.Text = checkBox4.Checked ? "-" : "" + DateTime.Now.Minute;
+        }
+
+
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            CurrDay = numericUpDown1.Text;
+        }
+
+        private void numericUpDown2_ValueChanged(object sender, EventArgs e)
+        {
+            CurrMonth = numericUpDown2.Text;
+        }
+
+        private void numericUpDown3_ValueChanged(object sender, EventArgs e)
+        {
+            CurrYear = numericUpDown3.Text;
         }
     }
 }

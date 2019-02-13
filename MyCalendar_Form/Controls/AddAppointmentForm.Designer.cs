@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddAppointmentForm));
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
@@ -170,6 +171,7 @@
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(80, 20);
             this.numericUpDown1.TabIndex = 12;
+            this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
             // numericUpDown2
             // 
@@ -184,6 +186,7 @@
             this.numericUpDown2.Name = "numericUpDown2";
             this.numericUpDown2.Size = new System.Drawing.Size(80, 20);
             this.numericUpDown2.TabIndex = 13;
+            this.numericUpDown2.ValueChanged += new System.EventHandler(this.numericUpDown2_ValueChanged);
             // 
             // numericUpDown3
             // 
@@ -198,6 +201,7 @@
             this.numericUpDown3.Name = "numericUpDown3";
             this.numericUpDown3.Size = new System.Drawing.Size(80, 20);
             this.numericUpDown3.TabIndex = 14;
+            this.numericUpDown3.ValueChanged += new System.EventHandler(this.numericUpDown3_ValueChanged);
             // 
             // textBox1
             // 
@@ -236,7 +240,7 @@
             this.numericUpDown4.ForeColor = System.Drawing.Color.Aqua;
             this.numericUpDown4.Location = new System.Drawing.Point(549, 200);
             this.numericUpDown4.Maximum = new decimal(new int[] {
-            12,
+            59,
             0,
             0,
             0});
@@ -250,7 +254,7 @@
             this.numericUpDown5.ForeColor = System.Drawing.Color.Aqua;
             this.numericUpDown5.Location = new System.Drawing.Point(358, 200);
             this.numericUpDown5.Maximum = new decimal(new int[] {
-            31,
+            23,
             0,
             0,
             0});
@@ -318,7 +322,10 @@
             this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.checkBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "AddAppointmentForm";
+            this.ShowInTaskbar = false;
             this.Text = "AddAppointmentForm";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();

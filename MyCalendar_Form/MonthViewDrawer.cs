@@ -10,11 +10,11 @@ namespace MyCalendar_Form
 {
     class MonthViewDrawer
     {
-        Form1 f;
+        MainForm f;
         Graphics g;
 
 
-        public MonthViewDrawer(Form1 f)
+        public MonthViewDrawer(MainForm f)
         {
             this.f = f;
         }

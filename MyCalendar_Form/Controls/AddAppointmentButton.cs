@@ -35,14 +35,15 @@ namespace MyCalendar_Form.Controls
             g.Clip = new Region(borderRect);
 
             g.FillRectangle(new SolidBrush(BackColor), borderRect);
-            borderRect.Inflate(-1, -1);
+            borderRect.Width--;
+            borderRect.Height--;
             g.DrawRectangle(new Pen(Color.Black), borderRect);
             g.DrawString(Text, font, new SolidBrush(Color.Cyan), borderRect, stringFormat);
         }
 
         protected override void OnMouseEnter(EventArgs e)
         {
-            BackColor = Color.White;
+            BackColor = Color.FromArgb(70, 70, 70);
             base.OnMouseEnter(e);
             Refresh();
         }
@@ -57,7 +58,7 @@ namespace MyCalendar_Form.Controls
         protected override void OnClick(EventArgs e)
         {
             base.OnClick(e);
-            ((Form1)Parent).AddAppointmentButton_Click(this, e);
+            ((MainForm)Parent).AddAppointmentButton_Click(this, e);
         }
     }
 }

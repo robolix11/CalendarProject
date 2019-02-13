@@ -9,15 +9,15 @@ namespace MyCalendar_Form
 {
     public class Cache
     {
-        List<MonthData> monthData = new List<MonthData>();
+        public List<MonthData> monthData = new List<MonthData>();
 
-        List<Tuple<Appointment, int, int>> YearlyAppointments = new List<Tuple<Appointment, int, int>>();
-        List<Tuple<Appointment, int>> MonthlyAppointments = new List<Tuple<Appointment, int>>();
-        List<Appointment> DaylyAppointments = new List<Appointment>();
+        public List<Tuple<Appointment, int, int>> YearlyAppointments = new List<Tuple<Appointment, int, int>>();
+        public List<Tuple<Appointment, int>> MonthlyAppointments = new List<Tuple<Appointment, int>>();
+        public List<Appointment> DaylyAppointments = new List<Appointment>();
 
-        Form1 form;
+        MainForm form;
 
-        public Cache(Form1 form)
+        public Cache(MainForm form)
         {
             this.form = form;
         }

@@ -39,10 +39,10 @@ namespace MyCalendar_Form.Controls
 
         DayButton dayButton;
 
-        Form1 form;
+        MainForm form;
         AppointmentButtonField abf;
 
-        public DayButtonField(Form1 xForm, AppointmentButtonField appointmentButtonField)
+        public DayButtonField(MainForm xForm, AppointmentButtonField appointmentButtonField)
         {
             form = xForm;
             abf = appointmentButtonField;
@@ -78,7 +78,9 @@ namespace MyCalendar_Form.Controls
 
         internal void RefreshDay(int day)
         {
-            DayButtons.Find(db => db.IsMainMonth && db.Text == "" + day).Refresh();
+            DayButton db = DayButtons.Find(d => d.IsMainMonth && d.Text == "" + day);
+            if (db == null) return;
+            db.Refresh();
         }
 
         internal void RefreshAll()
